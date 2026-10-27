@@ -23,9 +23,10 @@
   "qinglong/LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
   "qinglong/PYTHON_QINGLONG.md": "8ea3b4f8688fac9f3ca7b80c842d12a1a4c7b4e94e6ca70747e220f0d3c983e7",
   "qinglong/qrcodegen.py": "9f4ed1dd201dcb92b1bc0d6e14f46c754bcff0ce48580c5d7e8ace8f6926c8ef",
-  "qinglong/README.md": "8750ee4f8ff6145f615d3429ab58536ab54f0d7bb1b23c0fc5a09f3eed819fe5",
+  "qinglong/README.md": "eec88179df4a08e436b2dc970f8458904d96b6ca4597c052cbdb9582f45a5d81",
+  "qinglong/SUBSCRIPTION.md": "41e09632ce2b836b6d04feb2e0c9b6a3e29e5dd3700ff00d6f2015fd1512ec56",
   "qinglong/test_bili_qinglong.py": "e6f1e7733e96ddd1a9e0fe47f564de614ee82d78ce5bb0446ba19f27266cfc85",
-  "README.md": "027d186177f0afb05c8d75bcc7c26ae4e585d5df0d5bab86ee91d47c6e5cc1da",
+  "README.md": "cddf1e61f8f3b196b8c821e985a2247efd266ce1bf9658e8b2731145deab0cb1",
   "webui/bili_device.py": "722002a809d2a9b2e421e06e11112793f09b08fe73e372d77004be2090d2677b",
   "webui/bili_login.py": "0c0cbe95eeb6f7c390a3eb0837d19f8f728f9773f04638c4f462697c239352d8",
   "webui/bili_medal.py": "eae2487ce5877ad799f10f4df13db2bd2e6d2f4545b18a80fa3bfa11f55f884c",
@@ -59,7 +60,7 @@
   "webui/python_port/templates/today.html": "b940b50cd10bf228ca20d08a06034617945132d9e8547775678f8a8a81c28dfb",
   "webui/python_port/today.py": "3bde798d1ed8c58eee808ddf0d663fcc7875034dc512d9e7eb18be37bfd6221d",
   "webui/qrcodegen.py": "9f4ed1dd201dcb92b1bc0d6e14f46c754bcff0ce48580c5d7e8ace8f6926c8ef",
-  "webui/README.md": "e0baa68e085c43cf5f0e744aa8f8689b117a5d83a00d51417397e060049f4bab",
+  "webui/README.md": "9ef7816d68e7eec9059e8fb405a042001d6d38c61a1d5b22abeaf2359d2e9400",
   "webui/test_bili_qinglong.py": "e6f1e7733e96ddd1a9e0fe47f564de614ee82d78ce5bb0446ba19f27266cfc85",
   "webui/test_python_port.py": "a84f2bf41abece643533acb76e2299ca76696f604fc6700eb21aed47b3e79e17"
 }

@@ -1,6 +1,6 @@
 # 青龙版
 
-Python 3.9+，无需安装第三方依赖。将本目录文件上传到青龙的同一个脚本目录，例如 `bilitool_python_port/`。不要上传账号 Cookie 或本地数据库。
+Python 3.9+，无需安装第三方依赖。推荐按 [订阅拉取说明](SUBSCRIPTION.md) 从 GitHub 同步；也可将本目录文件上传到青龙的同一个脚本目录，例如 `bilitool_python_port/`。不要上传账号 Cookie 或本地数据库。
 
 ## 快速开始
 
