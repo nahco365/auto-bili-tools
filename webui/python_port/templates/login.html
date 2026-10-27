@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block login_content %}
+<section class="card login-card">
+  <div class="brand">BiliBiliToolPro <small>Python</small></div>
+  <h1>面板登录</h1>
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>用户名<input name="username" autocomplete="username" required autofocus></label>
+    <label>密码<input name="password" type="password" autocomplete="current-password" required></label>
+    <button class="primary" type="submit">登录</button>
+  </form>
+</section>
+{% endblock %}

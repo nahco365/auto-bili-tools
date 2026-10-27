@@ -1,0 +1,28 @@
+name: Python tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package: [qinglong, webui]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.12'
+      - name: Install WebUI dependencies
+        if: matrix.package == 'webui'
+        run: python -m pip install -r webui/python_port/requirements.txt
+      - name: Test Qinglong
+        if: matrix.package == 'qinglong'
+        working-directory: qinglong
+        run: python -m unittest test_bili_qinglong.py -q
+      - name: Test WebUI
+        if: matrix.package == 'webui'
+        working-directory: webui
+        run: python -m unittest test_python_port.py test_bili_qinglong.py -q

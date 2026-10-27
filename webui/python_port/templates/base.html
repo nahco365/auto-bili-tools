@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{{ title }} · BiliBiliToolPro Python</title>
+  <link rel="stylesheet" href="{{ url_for('static',filename='app.css') }}">
+</head>
+<body>
+{% if session.get('authenticated') %}
+<div class="shell">
+  <aside class="sidebar">
+    <div class="brand">BiliBiliToolPro <small>Python</small></div>
+    <nav>
+      <a href="{{ url_for('home') }}">首页</a>
+      <a href="{{ url_for('accounts') }}">B 站账号</a>
+      <a href="{{ url_for('today') }}">今日任务</a>
+      <a href="{{ url_for('medals_page') }}">粉丝勋章概览</a>
+      <a href="{{ url_for('schedules') }}">计划任务与日志</a>
+      <div class="nav-heading">任务配置</div>
+      {% for section,label in [('DailyTaskConfig','每日任务'),('MangaTaskConfig','漫画任务'),('MangaPrivilegeTaskConfig','漫画权益'),('Silver2CoinTaskConfig','银瓜子兑换'),('ChargeTaskConfig','充电'),('VipPrivilegeConfig','会员权益'),('VipBigPointConfig','大会员积分'),('LiveLotteryTaskConfig','天选抽奖'),('LiveFansMedalTaskConfig','粉丝勋章'),('UnfollowBatchedTaskConfig','批量取关'),('Security','安全与请求'),('DeviceCookie','设备 Cookie')] %}
+      <a href="{{ url_for('settings',section=section) }}">{{ label }}</a>
+      {% endfor %}
+      <div class="nav-heading">系统</div>
+      <a href="{{ url_for('notifications') }}">通知</a>
+      <a href="{{ url_for('settings',section='AutoRecoverConfig') }}">自动补做</a>
+      <a href="{{ url_for('admin') }}">管理员</a>
+      <a href="{{ url_for('about') }}">关于</a>
+    </nav>
+    <form action="{{ url_for('logout') }}" method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="logout">退出 {{ admin_name }}</button></form>
+  </aside>
+  <main class="main">
+    <header class="page-header"><h1>{{ title }}</h1><span>{{ now|default('') }}</span></header>
+    {% for category,message in get_flashed_messages(with_categories=true) %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}
+    {% block content %}{% endblock %}
+  </main>
+</div>
+{% else %}
+<main class="login-shell">
+  {% for category,message in get_flashed_messages(with_categories=true) %}<div class="alert {{ category }}">{{ message }}</div>{% endfor %}
+  {% block login_content %}{% endblock %}
+</main>
+{% endif %}
+</body>
+</html>

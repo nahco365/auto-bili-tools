@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="cards">
+  <a class="card stat" href="{{ url_for('accounts') }}"><strong>{{ accounts|length }}</strong><span>B 站账号</span></a>
+  <a class="card stat" href="{{ url_for('schedules') }}"><strong>{{ schedules|selectattr('enabled')|list|length }}</strong><span>启用的计划</span></a>
+  <a class="card stat" href="{{ url_for('today') }}"><strong>{{ runs|selectattr('status','equalto','Failed')|list|length }}</strong><span>最近失败任务</span></a>
+</div>
+<section class="card"><h2>最近执行</h2>
+  <table><thead><tr><th>任务</th><th>触发</th><th>状态</th><th>开始时间</th><th></th></tr></thead><tbody>
+  {% for run in runs %}<tr><td>{{ task_labels.get(run.task,run.task) }}</td><td>{{ run.trigger }}</td><td><span class="badge {{ run.status|lower }}">{{ run.status }}</span></td><td>{{ run.started_at[:19] }}</td><td><a href="{{ url_for('run_detail',run_id=run.id) }}">日志</a></td></tr>{% else %}<tr><td colspan="5">暂无执行记录</td></tr>{% endfor %}
+  </tbody></table>
+</section>
+{% endblock %}

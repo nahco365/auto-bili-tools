@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card narrow"><h2>{{ title }}</h2>
+<form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+{% for name,label,kind,default in fields %}{% set value = current.get(section + ':' + name, default) %}
+  {% if kind == 'bool' %}<label class="toggle"><input type="checkbox" name="{{ name }}" {% if value|lower in ('true','1','yes','on') %}checked{% endif %}><span>{{ label }}</span></label>
+  {% else %}<label>{{ label }}<input type="{{ kind }}" name="{{ name }}" value="{{ value }}" {% if kind == 'number' %}step="1"{% endif %}></label>{% endif %}
+{% endfor %}
+{% if section == 'ChargeTaskConfig' %}
+<h3>按账号指定充电目标</h3><p class="muted">多账号时仅使用以下账号专属目标；留空的账号不充电。只有一个账号时，未填专属目标会使用上方通用目标；两处均留空则不充电。</p>
+{% for account in accounts %}<label>账号 UID {{ account.uid }} 的目标 UP UID
+  <input type="text" inputmode="numeric" name="target_{{ account.uid }}" value="{{ current.get('ChargeTaskConfig:AutoChargeUpId:' + account.uid, '') }}" placeholder="留空则不充电">
+</label>{% endfor %}
+{% endif %}
+<button class="primary">保存配置</button></form>
+</section>
+{% endblock %}

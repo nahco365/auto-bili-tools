@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card"><h2>扫码登录</h2><p>使用 B 站手机应用扫码。完成后账号将保存在本面板。</p>
+  <p class="muted">如在青龙中运行命令行登录脚本，配置 <code>Ray_QingLongConfig__ClientId</code> 和 <code>Ray_QingLongConfig__ClientSecret</code> 后可自动写入青龙环境变量。命令行登录日志会始终输出完整 Cookie，便于自动写入失败时手动保存。</p>
+  <button type="button" id="qr-start" class="primary">生成登录二维码</button><p id="qr-status" aria-live="polite"></p><div id="qr-code"></div>
+</section>
+<section class="card"><h2>添加账号 Cookie</h2>
+  <form method="post" action="{{ url_for('add_account') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <label>Cookie<textarea name="cookie" rows="3" required placeholder="SESSDATA=...; bili_jct=...; DedeUserID=..."></textarea></label>
+    <button class="primary">添加账号</button>
+  </form>
+</section>
+<section class="card"><h2>已保存账号</h2>
+  {% for account in accounts %}<div class="account-row"><div><strong>账号 {{ loop.index }}</strong><span>UID {{ account.uid }}</span></div>
+    <div class="actions"><form method="post" action="{{ url_for('check_account',account_id=account.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button>检测</button></form>
+    <form method="post" action="{{ url_for('move_account',account_id=account.id,direction='up') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button {% if loop.first %}disabled{% endif %}>上移</button></form>
+    <form method="post" action="{{ url_for('move_account',account_id=account.id,direction='down') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button {% if loop.last %}disabled{% endif %}>下移</button></form>
+    <form method="post" action="{{ url_for('delete_account',account_id=account.id) }}" onsubmit="return confirm('确认删除此账号？')"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="danger">删除</button></form></div>
+  </div><details><summary>更新 UID {{ account.uid }} 的 Cookie</summary><form method="post" action="{{ url_for('update_account',account_id=account.id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><textarea name="cookie" rows="3" required>{{ account.cookie }}</textarea><button class="primary">保存 Cookie</button></form></details>
+  {% else %}<p>尚未添加账号。</p>{% endfor %}
+</section>
+<script>
+const csrf = {{ csrf_token|tojson }};
+const status = document.getElementById('qr-status');
+document.getElementById('qr-start').addEventListener('click', async () => {
+  status.textContent = '正在生成...';
+  const response = await fetch({{ url_for('qr_start')|tojson }}, {method:'POST', headers:{'X-CSRF-Token':csrf}});
+  const data = await response.json();
+  if (!response.ok) { status.textContent = data.error || '生成失败'; return; }
+  const holder = document.getElementById('qr-code');
+  holder.replaceChildren();
+  const img = document.createElement('img'); img.src = data.image; img.alt = 'B 站登录二维码'; img.width = 240; img.height = 240;
+  holder.appendChild(img);
+  status.textContent = '请扫码；此页会自动检测登录状态。';
+  const timer = setInterval(async () => {
+    const check = await fetch({{ url_for('qr_poll')|tojson }}, {method:'POST', headers:{'Content-Type':'application/json','X-CSRF-Token':csrf}, body:JSON.stringify({token:data.token})});
+    const result = await check.json();
+    if (result.status === 'success') { clearInterval(timer); location.reload(); }
+    else if (result.status === 'expired' || result.status === 'error') { clearInterval(timer); status.textContent = result.message || '二维码已失效'; }
+    else { status.textContent = result.message || '等待扫码...'; }
+  }, 5000);
+});
+</script>
+{% endblock %}

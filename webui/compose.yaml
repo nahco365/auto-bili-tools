@@ -1,0 +1,16 @@
+services:
+  bilitool-webui:
+    build:
+      context: .
+      dockerfile: python_port/Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./data:/app/data
+    environment:
+      BILI_PY_DB: /app/data/bilitool.sqlite
+      BILI_PY_HOST: 0.0.0.0
+      BILI_ADMIN_PASSWORD: ${BILI_ADMIN_PASSWORD:?Set BILI_ADMIN_PASSWORD in a local .env file}
+      BILI_HTTPS: ${BILI_HTTPS:-false}
+      TZ: Asia/Shanghai
+    restart: unless-stopped

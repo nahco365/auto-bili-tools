@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card"><h2>定时计划</h2><p class="muted">支持五段 crontab 和六段 Quartz 表达式。时间按服务器本地时区计算。</p>
+<table><thead><tr><th>任务</th><th>Cron</th><th>启用</th><th>操作</th></tr></thead><tbody>
+{% for item in schedules %}<tr><td>{{ task_labels.get(item.task,item.task) }}</td><td colspan="2"><form id="schedule-{{ item.task }}" method="post" action="{{ url_for('schedule_save',task=item.task) }}" class="inline"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input class="cron" name="cron" value="{{ item.cron }}" required><label class="checkbox"><input type="checkbox" name="enabled" {% if item.enabled %}checked{% endif %}>启用</label></form></td>
+<td><div class="actions"><button form="schedule-{{ item.task }}">保存</button><form method="post" action="{{ url_for('run_task',task=item.task) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="primary">立即运行</button></form></div></td></tr>{% endfor %}
+</tbody></table></section>
+<section class="card"><h2>执行历史</h2>
+<table><thead><tr><th>任务</th><th>触发</th><th>状态</th><th>开始</th><th>结束</th><th></th></tr></thead><tbody>
+{% for run in runs %}<tr><td>{{ task_labels.get(run.task,run.task) }}</td><td>{{ run.trigger }}</td><td><span class="badge {{ run.status|lower }}">{{ run.status }}</span></td><td>{{ run.started_at[:19] }}</td><td>{{ (run.finished_at or '—')[:19] }}</td><td><a href="{{ url_for('run_detail',run_id=run.id) }}">日志</a></td></tr>{% else %}<tr><td colspan="6">暂无记录</td></tr>{% endfor %}
+</tbody></table></section>
+{% endblock %}

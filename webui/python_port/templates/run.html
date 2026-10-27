@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card"><div class="row"><h2>{{ task_labels.get(run.task,run.task) }}</h2><span class="badge {{ run.status|lower }}">{{ run.status }}</span></div>
+<p class="muted">{{ run.trigger }} · {{ run.started_at[:19] }} {% if run.finished_at %}→ {{ run.finished_at[:19] }}{% endif %}</p>
+<pre class="log">{{ run.output }}</pre>
+{% if run.status == 'Running' %}<p>任务执行中，页面每 5 秒自动刷新。</p><script>setTimeout(()=>location.reload(),5000)</script>{% endif %}
+</section>
+{% endblock %}

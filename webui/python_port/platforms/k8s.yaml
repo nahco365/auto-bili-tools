@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: bilitool-python-data
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bilitool-python
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: bilitool-python
+  template:
+    metadata:
+      labels:
+        app: bilitool-python
+    spec:
+      containers:
+        - name: web
+          image: bilitool-python:local
+          ports:
+            - containerPort: 8080
+          env:
+            - name: BILI_PY_DB
+              value: /app/data/bilitool.sqlite
+            - name: BILI_PY_HOST
+              value: 0.0.0.0
+            - name: TZ
+              value: Asia/Shanghai
+            - name: BILI_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bilitool-python-admin
+                  key: password
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: bilitool-python-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bilitool-python
+spec:
+  selector:
+    app: bilitool-python
+  ports:
+    - port: 8080
+      targetPort: 8080

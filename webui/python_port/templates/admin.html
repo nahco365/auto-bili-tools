@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="cards two">
+<section class="card"><h2>修改登录名</h2><p>当前：{{ admin.username }}</p><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action" value="username"><label>新登录名<input name="username" required maxlength="50"></label><label>当前密码<input type="password" name="current_password" required></label><button class="primary">修改并重新登录</button></form></section>
+<section class="card"><h2>修改密码</h2><form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="action" value="password"><label>当前密码<input type="password" name="current_password" required></label><label>新密码<input type="password" name="new_password" minlength="8" required></label><button class="primary">修改并重新登录</button></form></section>
+</div>
+{% endblock %}

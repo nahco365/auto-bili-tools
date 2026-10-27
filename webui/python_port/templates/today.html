@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row"><p class="muted">今日记录来自本面板。点击检查可读取 B 站每日任务状态。</p><a class="button" href="{{ url_for('today',probe=1) }}">检查 B 站状态</a></div>
+{% for row in snapshots %}
+<section class="card"><h2>{{ row.profile.name if row.profile and row.profile.name else '账号 ' ~ loop.index }} · UID {{ row.account.uid }}</h2>
+{% if row.profile and not row.profile.valid %}<div class="alert error">账号状态检查失败，请到账号管理检查 Cookie。</div>{% endif %}
+<table><thead><tr><th>任务 / 检查项</th><th>今日状态</th><th>触发方式</th><th>操作</th></tr></thead><tbody>
+{% for group in row.groups %}
+<tr><td><strong>{{ task_labels.get(group.task,group.task) }}</strong></td><td><span class="badge {{ group.status|lower }}">{{ group.status }}</span></td>
+<td>{{ group.record.trigger if group.record else '—' }}</td><td><form method="post" action="{{ url_for('run_task',task=group.task) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="uid" value="{{ row.account.uid }}"><button>补做</button></form></td></tr>
+{% for item in group['items'] %}<tr class="subrow"><td>↳ {{ item.label }}</td><td><span class="badge {{ item.status|lower }}">{{ item.status }}</span></td><td colspan="2"></td></tr>{% endfor %}
+{% endfor %}
+</tbody></table></section>
+{% else %}<section class="card">尚未添加 B 站账号。<a href="{{ url_for('accounts') }}">去添加</a></section>{% endfor %}
+{% endblock %}

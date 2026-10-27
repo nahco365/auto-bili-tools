@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="card">
+  <h2>账号与刷新</h2>
+  {% if accounts %}<form method="get" action="{{ url_for('medals_page') }}" class="inline">
+    <select name="uid" aria-label="选择账号">{% for account in accounts %}<option value="{{ account.uid }}" {% if account.uid == selected_uid %}selected{% endif %}>UID {{ account.uid }}</option>{% endfor %}</select>
+    <button>查看</button><button type="submit" name="refresh" value="1">刷新</button>
+  </form>{% else %}<p>请先添加 B 站账号。</p>{% endif %}
+  {% if error %}<p class="alert error">{{ error }}</p>{% endif %}
+</section>
+{% if cards %}<section class="card"><h2>勋章列表（{{ cards|length }}）</h2>
+  <table><thead><tr><th>主播</th><th>勋章</th><th>等级</th><th>直播</th><th>任务进度</th></tr></thead><tbody>
+  {% for card in cards %}<tr><td>{{ card.name }}<br><span class="muted">UID {{ card.anchor }}</span></td><td>{{ card.medal }}</td><td>Lv{{ card.level }}</td><td>{{ '开播' if card.live else '未开播' }}</td>
+    <td>{% if card.error %}{{ card.error }}{% else %}{% for task in card.tasks %}<div>{{ task.name }}：{{ task.progress }} {% if task.done %}✓{% endif %}</div>{% else %}<span class="muted">无任务</span>{% endfor %}{% endif %}</td></tr>{% endfor %}
+  </tbody></table>
+</section>{% endif %}
+{% endblock %}
